@@ -1,12 +1,33 @@
-import { useState } from "react"
+import { useRef, useState } from "react"
 import Header from "./Header"
+import {checkValidData} from "../utils/Validate"
 
 const Login = () => {
 
     const [isSignInForm, setIsSignInForm] = useState(true)
+    const [errorMessage, setErrorMessage] = useState()
 
-    const handleSignupForm = ()=>{
+    const email = useRef(null)
+    const password = useRef(null)
+    const name = useRef(null)
+
+    const handleButtonClick = ()=>{
+        
+        console.log(email.current.value)
+        console.log(password.current.value)
+        console.log(name.current.value)
+
+        const message = checkValidData(email.current.value, password.current.value, name.current.value)
+        console.log(message)
+        setErrorMessage(message)
+        
+
+    }
+
+    const handleSignupForm = () => {
         setIsSignInForm(!isSignInForm)
+
+        
     }
 
     return <div>
@@ -17,12 +38,13 @@ const Login = () => {
                 className=""
             />
         </div>
-        <form className="bg-black/85 p-12 text-white absolute w-3/12 my-32 mx-auto right-0 left-0">
+        <form onSubmit={(e)=>e.preventDefault()} className="bg-black/85 p-12 text-white absolute w-3/12 my-32 mx-auto right-0 left-0">
             <h1 className="font-bold text-2xl py-4">{isSignInForm ? "Sign In" : "Sign Up"}</h1>
-            {!isSignInForm && <input type="text" placeholder="Full Name" className="p-2 my-3 w-full border-1 border-white rounded-md" />}
-            <input type="text" placeholder="Email Address" className="p-2 my-3 w-full border-1 border-white rounded-md" />
-            <input type="password" placeholder="Password" className="p-2 my-3 w-full border-1 border-white rounded-md" />
-            <button className="p-2 my-6  bg-red-600 w-full rounded-md">{isSignInForm ? "Sign In" : "Sign Up"}</button>
+            {!isSignInForm && <input ref={name} type="text" placeholder="Full Name" className="p-2 my-3 w-full border-1 border-white rounded-md" />}
+            <input ref={email} type="text" placeholder="Email Address" className="p-2 my-3 w-full border-1 border-white rounded-md" />
+            <input ref={password} type="password" placeholder="Password" className="p-2 my-3 w-full border-1 border-white rounded-md" />
+            <p className="text-red-600 text-sm">{errorMessage}</p>
+            <button onClick={handleButtonClick} className="p-2 my-6  bg-red-600 w-full rounded-md">{isSignInForm ? "Sign In" : "Sign Up"}</button>
             <p className="py-4 cursor-pointer hover:underline" onClick={handleSignupForm}>{isSignInForm ? "New to Netflix? Sign Up Now" : "Already registered ? Sign In Now"}</p>
         </form>
     </div>
